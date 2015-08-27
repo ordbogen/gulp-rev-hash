@@ -59,9 +59,10 @@ module.exports = function(options) {
         if (sections[i].match(startReg)) {
           var tag;
           var section = sections[i].split(startReg);
+          var indentation = section[1].substring(0, section[1].search(/\S|$/));
           var tags = getTags(section[1]);
           html.push(section[0]);
-          html.push('<!-- rev-hash -->\r\n')
+          html.push('<!-- rev-hash -->')
 
           for (var j = 0; j < tags.length; j++) {
             tag = tags[j];
@@ -71,9 +72,9 @@ module.exports = function(options) {
                 fs.readFileSync(
                   path.join((options.assetsDir?options.assetsDir:''), tag.path), {encoding: 'utf8'}))
               .digest("hex");
-            html.push(tag.html.replace(tag.pathReg, tag.path + '?v=' + hash + '"') + '\r\n');
+            html.push(indentation + tag.html.replace(tag.pathReg, tag.path + '?v=' + hash + '"'));
           }
-          html.push('<!-- end -->');
+          html.push(indentation + '<!-- end -->');
         }
         else { html.push(sections[i]); }
       }
